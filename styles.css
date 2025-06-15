@@ -1,0 +1,303 @@
+table {
+    width: 80%; 
+    margin: 20px auto; 
+    border-collapse: collapse; 
+}
+
+th, td {
+    padding: 8px; 
+    text-align: center; 
+    border: 2px solid #e7e1e0; 
+    font-size: 18px;
+}
+
+th {
+    background-color: #b2afae; 
+    color: black;
+    font-weight: bold; 
+}
+
+td {
+    background-color: #eee; 
+}
+
+
+h2 {
+    text-align: center;
+}
+
+.container {
+    width:90%;
+    height: auto;
+    border:1px solid grey;
+    margin:auto;
+}
+
+/*Для меню*/
+
+.header {
+    display: flex;
+    height: 15%;
+    width:90%;
+    margin:20px auto;
+    margin-bottom: 5px;
+}
+
+.title {
+    flex: 35%;
+    height: 100px;
+    font-size: 24px;
+    text-align: center;
+    align-content: center;
+    background-color: #d3d3d3;
+}
+
+.menu {
+    flex: 65%;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-block1 {
+    flex: 1;
+}
+
+.menu-block2 {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: end;
+    background-color: #d3d3d3;
+    margin-left: -60px;
+}
+
+.menu-item {
+    height: 40px;
+    padding-top: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 24px;
+    flex:1;
+}
+
+.menu-item.active {
+    color: red;
+}
+
+/*Для картинок*/
+
+.images{
+    width: 90%;
+    height: 300px;
+    display: grid;
+    margin:5px auto;
+    grid-column-gap: 2px;
+    grid-row-gap:4px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas: 
+        "img1 img2"
+        "img1 img3";
+}
+
+.image__1 {
+    grid-area: img1;
+    box-sizing: border-box;
+}
+
+.image__2 {
+    grid-area: img2;
+    box-sizing: border-box;
+}
+
+.image__3 {
+    grid-area: img3;
+    box-sizing: border-box;
+}
+
+.images img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.images > div {
+    overflow: hidden;
+}
+
+
+/*Для логотипов и описаний*/
+
+.logo{
+    display:flex;
+    flex-direction: row;
+    width: 40%;
+    height: 15%;
+    justify-content: space-evenly;
+    margin: auto;
+}
+
+.logo__item{
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo__item__foto{
+    height:49%;
+    width: 50%;
+    margin: auto;
+    border-radius: 100%;
+}
+
+.logo__item__foto img{
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 100%;
+}
+
+.logo__item__text{
+    height:49%;
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.logo__item__text p{
+    line-height: 1.0;
+    text-align: justify;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+/*Для блока контента*/
+
+.content{
+    width: 80%;
+    height: 35%;
+    display: grid;
+    margin:5px auto;
+    grid-column-gap: 10px;
+    grid-row-gap:10px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas: 
+        "txt1 txt1 txt1 image1"
+        "txt2 txt2 txt2 txt2";
+}
+
+.content > div{
+    overflow: hidden;
+}
+
+.content__text__1{
+    grid-area: txt1;
+    box-sizing: border-box;
+}
+
+.content h3{
+    margin: 10px 0;
+    font-size: 18px;
+    text-align: center;
+}
+
+.content p{
+    line-height: 1.5;
+    text-align: justify;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px;
+    text-align: left;
+    width: 100%;
+    overflow-wrap: break-word;
+}
+
+.content__image{
+    grid-area: image1;
+    box-sizing: border-box;
+}
+
+.content__image img{
+    width: 100%;
+    height: 150px;
+    object-fit: fill;
+}
+
+.content__text__2{
+    grid-area: txt2;
+    box-sizing: border-box;
+}
+
+@media (max-width: 800px){
+
+    .title{
+        display: none;
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .menu-block1 {
+        
+        background-color: #f8f8f8;
+    }
+
+    .menu-block2 {
+        margin-left: 0px;
+    }
+
+    .menu-item {
+        flex: 1 1 35%;
+        padding: 12px;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .images {
+        grid-template-columns: 1fr; 
+        grid-template-rows: repeat(3, auto); 
+        grid-template-areas: 
+            "img1"
+            "img2"
+            "img3"; 
+    }
+
+    .logo {
+        flex-direction: column; 
+    }
+
+    .logo__item {
+        width: 100%; 
+    }
+
+    .content {
+        grid-template-columns: 1fr; 
+        grid-template-rows: repeat(3, auto); 
+        grid-template-areas: 
+            "txt1"
+            "image1"
+            "txt2"; 
+    }
+}
+
+svg {
+    width: 800px;
+    height: 400px;
+}
+svg text {
+    font: 8px Verdana;
+}
+svg path, line {
+    fill: none;
+    stroke: #333333;
+    width: 1px;
+}

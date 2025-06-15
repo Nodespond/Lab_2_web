@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="JavaScript/data.js"></script>
+    <script src="JavaScript/table.js"></script>
+    <script src="JavaScript/main.js"></script>
+    <script src="JavaScript/filter.js"></script>
+    <script src="JavaScript/sort.js"></script>
+    <script src="JavaScript/chart.js"></script>
+    <script src="node_modules/d3/dist/d3.min.js"></script>
     <title>Document</title>
 </head>
 <body>
         <hr size="5" color="grey">
-    <h1 align="center">Меню страницы</h1>
+        <h1 align="center">Меню страницы</h1>
         <ul type="circle">
             <li><a href="main.html"><font size="5">Топ 5 аниме</font></a></li>
             <li><a href="table.html"><font size="5">Самые просматриваемые аниме из топа</font></a></li>
@@ -16,457 +24,95 @@
 
        <details>
         <summary>График</summary>
-        <table cellpadding="10">
-            <tr>
-            <td>
-            <form>
-                <strong>Значения по оси OX</strong>
-                <br>
-                <input type="radio" name="anitype" value="first">Тип Аниме<br>
-                <input type="radio" name="country" value="second">Страна<br>
-                <input type="radio" name="year" value="third">Год<br>
-                
-            </form>
-            </td>
-            <td>
-            <form>
-                <strong>Результат</strong>
-                <br>
-                <input type="checkbox" name="result" value="0"> Максимальное число серий <br>
-                <input type="checkbox" name="result" value="1"> Минимальное число серий <br>
-                <input type="checkbox" name="result" value="2"> Количество серий <br>
-            </form>
-            </td>
-            </tr>
-        </table>
-        <input type="button" value="Построить">
-        <p>Здесь будет график</p>
+        <div class="controls">
+          <label>Значения по оси ОХ:</label><br><br>
+          <input type="radio" id="ox-country" name="x-axis" value="Страна">
+          <label for="ox-country">Страна</label><br>
+          <input type="radio" id="ox-year" name="x-axis" value="Год выпуска">
+          <label for="ox-year">Год выпуска</label><br>
+          <input type="radio" id="ox-type" name="x-axis" value="Тип Аниме">
+          <label for="ox-type">Тип аниме</label><br><br>
+          
+          <label>Значения по оси OY:</label><br><br>
+          <div>
+              <input type="checkbox" id="y-min" >
+              <label for="y-min">Минимальная высота</label>
+          </div>
+          <div>
+              <input type="checkbox" id="y-max">
+              <label for="y-max">Максимальная высота</label>
+          </div><br><br>
+          
+          <label>Тип графика:</label>
+          <select id="chartType">
+              <option value="scatter">Точечная диаграмма</option>
+              <option value="gist">Гистограмма</option>
+              <option value="line">График</option>
+          </select><br><br>
+          
+          <button id="updateGraph">Построить</button>
+      </div>
+      
+        <svg></svg>
         
        </details>
 
        <details>
         <summary>Фильтр</summary>
-        <form>
+        <form id="filter">
             <p>
-            Название:
-            <input type="text" name="name" id="name"><br>
+            <label for="structure">Название:</label>
+            <input type="text" id="structure"><br>
             </p>
             <p>
-            Тип Аниме:
-            <input type="text" name="type" id="type"><br>
+            <label for="category">Тип:</label>
+            <input type="text" id="category"><br>
             </p>
             <p>
-            Страна:
-            <input type="text" name="country" id="country"><br>
+            <label for="country">Страна:</label>
+            <input type="text" id="country"><br>
             </p>
             <p>
-            Год выпуска: от
-            <input type="number" min="1900" max="2024"> до 
-            <input type="number" min="1900" max="2024"><br>
+            <label for="yearFrom">Год выпуска: </label>
+            от <input type="number" min="1900" max="2024" id="yearFrom"> до 
+            <input type="number" min="1900" max="2024" id="yearTo"><br>
             </p>
             <p>
-            Количество серий: от
-            <input type="number" min="1" max="1500"> до 
-            <input type="number" min="1" max="1500"><br>
+            <label for="heightFrom">Количество серий:</label>
+            от <input type="number" min="1" max="1500" id="heightFrom"> до 
+            <input type="number" min="1" max="1500" id="heightTo"><br>
             </p>
-            <input type="submit" value="Найти">
+            <input type="button" value="Найти">
+            <input type="button" value="Очистить фильтры"> 
         </form>
        </details>
 
        <details>
         <summary>Сортировка</summary>
-        <form>
+        <form id="sort">
+            <p> Сортировать по</p>
             <p>
-            Первый уровень: 
-            <select name="choice_1">
-                <option value="0" selected> Нет </option>
-                <option value="1"> Да </option>    
-               </select>
-            по убыванию? 
-            <input type="checkbox" name="result" value="1_stage"><br>
+              <select id="fieldsFirst">
+              </select> 
+              по убыванию? <input  type="checkbox"  id="fieldsFirstDesc">
             </p>
-            <p>
-            Второй уровень: 
-            <select name="choice_2">
-                <option value="0" selected> Нет </option>
-                <option value="1"> Да </option>    
-               </select>
-            по убыванию? 
-            <input type="checkbox" name="result" value="2_stage"><br>
+            <p> 
+              <select id="fieldsSecond">
+              </select> 
+              по убыванию? <input  type="checkbox"  id="fieldsSecondDesc">
             </p>
-            <p>
-            Третий уровень: 
-            <select name="choice_3">
-                <option value="0" selected> Нет </option>
-                <option value="1" > Да </option>    
-               </select>
-            по убыванию? 
-            <input type="checkbox" name="result" value="3_stage"><br>
-            </p>
-            <p>
-            <input type="submit" value="Сортировать">
-            </p>
-        </form>
+            <p> 
+                <select id="fieldsThird">
+                </select> 
+                по убыванию? <input  type="checkbox"  id="fieldsThirdDesc">
+              </p>
+            <input type="button" value="Сортировать"> 
+            <input type="button" value="Сбросить сортировку">
+          </form>   
        </details>
 
-        <table border="2" cellspacing="0" cellpadding="5">
-            <tr>
-                <td><strong>Название</strong></td> 
-                <td><strong>Тип аниме</strong></td>
-                <td><strong>Страна производства</strong></td> 
-                <td><strong>Год выпуска</strong></td>
-                <td><strong>Количество серий</strong></td> 
-            </tr>
-            <tr>
-                <td>Тетрадь смерти</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>39</td> 
-            </tr>
-            <tr>
-                <td>Блю Лок: Синяя тюрьма</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2023</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Евангелион 3.3: Ты не исправишь</td> 
-                <td>Фильм</td>
-                <td>Япония</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Психопаспорт</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2017</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Ковбой Бибоп</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2005</td>
-                <td>25</td> 
-            </tr>
-            <tr>
-                <td>Врата Штейна: Деление на 0</td> 
-                <td>OVA</td>
-                <td>Япония</td> 
-                <td>2014</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Клинок Рассекающий Демонов</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2017</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Кабанери Железной Крепости: Битва за Унато</td> 
-                <td>Фильм</td>
-                <td>Япония</td> 
-                <td>2012</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Агент Времени</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2021</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Берсерк</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2007</td>
-                <td>27</td> 
-            </tr>
-            <tr>
-                <td>Red Line</td> 
-                <td>Фильм</td>
-                <td>США</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Эльфийская песнь</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Реинкарнация Безработного</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2018</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Созданный в Бездне</td> 
-                <td>Сериал</td>
-                <td>США</td> 
-                <td>2018</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Киберпанк 2046</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2022</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Тетрадь смерти</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>39</td> 
-            </tr>
-            <tr>
-                <td>Блю Лок: Синяя тюрьма</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2023</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Евангелион 3.3: Ты не исправишь</td> 
-                <td>Фильм</td>
-                <td>Япония</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Психопаспорт</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2017</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Ковбой Бибоп</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2005</td>
-                <td>25</td> 
-            </tr>
-            <tr>
-                <td>Врата Штейна: Деление на 0</td> 
-                <td>OVA</td>
-                <td>Япония</td> 
-                <td>2014</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Клинок Рассекающий Демонов</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2017</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Кабанери Железной Крепости: Битва за Унато</td> 
-                <td>Фильм</td>
-                <td>Япония</td> 
-                <td>2012</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Агент Времени</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2021</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Берсерк</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2007</td>
-                <td>27</td> 
-            </tr>
-            <tr>
-                <td>Red Line</td> 
-                <td>Фильм</td>
-                <td>США</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Эльфийская песнь</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Реинкарнация Безработного</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2018</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Созданный в Бездне</td> 
-                <td>Сериал</td>
-                <td>США</td> 
-                <td>2018</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Киберпанк 2046</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2022</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Тетрадь смерти</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>39</td> 
-            </tr>
-            <tr>
-                <td>Блю Лок: Синяя тюрьма</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2023</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Евангелион 3.3: Ты не исправишь</td> 
-                <td>Фильм</td>
-                <td>Япония</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Психопаспорт</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2017</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Ковбой Бибоп</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2005</td>
-                <td>25</td> 
-            </tr>
-            <tr>
-                <td>Врата Штейна: Деление на 0</td> 
-                <td>OVA</td>
-                <td>Япония</td> 
-                <td>2014</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Клинок Рассекающий Демонов</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2017</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Кабанери Железной Крепости: Битва за Унато</td> 
-                <td>Фильм</td>
-                <td>Япония</td> 
-                <td>2012</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Агент Времени</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2021</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Берсерк</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2007</td>
-                <td>27</td> 
-            </tr>
-            <tr>
-                <td>Red Line</td> 
-                <td>Фильм</td>
-                <td>США</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Эльфийская песнь</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Реинкарнация Безработного</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2018</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Созданный в Бездне</td> 
-                <td>Сериал</td>
-                <td>США</td> 
-                <td>2018</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Киберпанк 2046</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2022</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Red Line</td> 
-                <td>Фильм</td>
-                <td>США</td> 
-                <td>2019</td>
-                <td>1</td> 
-            </tr>
-            <tr>
-                <td>Эльфийская песнь</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2008</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Реинкарнация Безработного</td> 
-                <td>Сериал</td>
-                <td>Япония</td> 
-                <td>2018</td>
-                <td>24</td> 
-            </tr>
-            <tr>
-                <td>Созданный в Бездне</td> 
-                <td>Сериал</td>
-                <td>США</td> 
-                <td>2018</td>
-                <td>12</td> 
-            </tr>
-            <tr>
-                <td>Киберпанк 2046</td> 
-                <td>Сериал</td>
-                <td>Китай</td> 
-                <td>2022</td>
-                <td>12</td> 
-            </tr>
+        <table id="list">
+
         </table>
 </body>
 </html>
