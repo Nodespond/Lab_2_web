@@ -49,7 +49,7 @@ function drawGraph(data, key="Год выпуска", mode="max", chartType="sca
 } 
 
 function createAxis(svg, data, attr_area, key){
-    // Сортируем данные если ключ - "Год"
+    //сортируем данные для ключа года
     const sortedData = key === "Год выпуска" 
         ? [...data].sort((a, b) => a.labelX - b.labelX)
         : data;
@@ -88,7 +88,7 @@ function createAxis(svg, data, attr_area, key){
 
 function createChart(svg, data, scaleX, scaleY, attr_area, mode) { 
     const r = 4;
-    const yOffset = 2; // Сдвиг вниз для красных точек при совпадении
+    const yOffset = 2; //сдвиг красных точек
     
     const colors = {
         'min': 'blue',
@@ -105,9 +105,9 @@ function createChart(svg, data, scaleX, scaleY, attr_area, mode) {
         .attr("cx", d => scaleX(d.labelX) + scaleX.bandwidth() / 2)
         .attr("cy", d => {
             const baseY = scaleY(d.values[0]);
-            // Для режима 'both' проверяем соседние точки
+            //чекаем соседние точки для режима both
             if (mode === 'both' && d.type === 'max') {
-                // Ищем соответствующую точку min
+                //ищем соответствующую точку min
                 const minPoint = data.find(item => 
                     item.labelX === d.labelX && item.type === 'min');
                 if (minPoint && minPoint.values[0] === d.values[0]) {
@@ -131,30 +131,30 @@ function createGistChart(svg, data, scaleX, scaleY, attr_area, mode) {
         'both_max': 'red'
     };
 
-     // Группируем данные по labelX для правильного позиционирования
+     //группируем данные для правильного позиционирования
      const groupedData = d3.group(data, d => d.labelX);
     
-     // Настройки внешнего вида
-     const barPadding = 0.3; // Отступ между группами столбцов (20%)
-     const innerPadding = 0; // Отступ между столбцами в группе
+     //внешний вид
+     const barPadding = 0.3; //отступ между парами столбцов
+     const innerPadding = 0; //отступ между столбцами
      
-     // Для каждого группированного элемента
+     //для каждой группы эл-тов
      groupedData.forEach((values, label) => {
          const groupWidth = scaleX.bandwidth();
          const barWidth = groupWidth * (1 - barPadding) / (mode === 'both' ? 2 : 1);
          
          values.forEach((d, i) => {
-             // Пропускаем если не в текущем режиме
+             //пропускаем если не в текущем режиме
              if ((mode === 'min' && d.type !== 'min') || 
                  (mode === 'max' && d.type !== 'max')) return;
                  
-             // Позиция столбца
+             //позиция столбцов
              const xPos = scaleX(label) + 
                  (mode === 'both' ? 
                      (groupWidth * barPadding/2 + i * (barWidth + groupWidth * innerPadding)) : 
                      (groupWidth * barPadding/2));
              
-             // Высота столбца
+             //высота столбцов
              const height = attr_area.height - attr_area.marginY - scaleY(d.values[0]);
              
              svg.append("rect")
@@ -162,7 +162,7 @@ function createGistChart(svg, data, scaleX, scaleY, attr_area, mode) {
                  .attr("x", xPos + attr_area.marginX)
                  .attr("width", barWidth)
                  .attr("y", scaleY(d.values[0]))
-                 .attr("height", height > 0 ? height : 0) // Защита от отрицательных значений
+                 .attr("height", height > 0 ? height : 0) //от отрицательных значений
                  .style("fill", colors[mode === 'both' ? `both_${d.type}` : mode])
                  .style("opacity", 0.8);
          });
@@ -177,23 +177,21 @@ function createLineChart(svg, data, scaleX, scaleY, attr_area, mode) {
         'both_max': 'red'
     };
 
-    const line_sdvig = 2;
-
-    // Сортируем данные по оси X
+    //сортируем данные по оси икс
     const sortedData = [...data].sort((a, b) => scaleX(a.labelX) - scaleX(b.labelX));
 
-    // Функция генератора линии
+    //рисовка линии
     const lineGenerator = d3.line()
         .x(d => scaleX(d.labelX) + scaleX.bandwidth() / 2 + attr_area.marginX)
         .y(d => scaleY(d.values[0]) + attr_area.marginY)
         .curve(d3.curveMonotoneX); // Сглаживание кривой
 
     if (mode === 'both') {
-        // Разделяем данные на min и max
+        //данные на min и max делим
         const minData = sortedData.filter(d => d.type === 'min');
         const maxData = sortedData.filter(d => d.type === 'max');
 
-        // Рисуем линию для min значений
+        //рисуем min линию
         svg.append("path")
             .datum(minData)
             .attr("class", "line")
@@ -202,7 +200,7 @@ function createLineChart(svg, data, scaleX, scaleY, attr_area, mode) {
             .style("stroke-width", 5)
             .style("fill", "none");
 
-        // Рисуем линию для max значений
+        //рисуем max линию
         svg.append("path")
             .datum(maxData)
             .attr("class", "line")
@@ -211,7 +209,7 @@ function createLineChart(svg, data, scaleX, scaleY, attr_area, mode) {
             .style("stroke-width", 3)
             .style("fill", "none");
     } else {
-        // Рисуем одну линию для текущего режима
+        //рисуем линию
         svg.append("path")
             .datum(sortedData)
             .attr("class", "line")
